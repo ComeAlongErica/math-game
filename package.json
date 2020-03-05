@@ -1,12 +1,12 @@
 {
-  "name": "typescript math game",
+  "name": "typescript_math_game",
   "version": "1.0.0",
   "description": "Simple math game built with TypeScript.",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server"
   },
-  "author": "Brice Wilson",
+  "author": "Erica Perry",
   "license": "ISC",
   "devDependencies": {
     "typescript": "^3.8.3",

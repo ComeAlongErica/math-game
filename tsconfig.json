@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "sourceMap": true,
+    "outDir": "js",
+    "strict": true,
+    "watch": true
+  },
+  "files": [
+    "app/app.ts"
+  ]
+}
