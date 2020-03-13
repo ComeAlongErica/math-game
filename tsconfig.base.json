@@ -5,6 +5,7 @@
     "outDir": "js",
     // "strict": true,
     "strictNullChecks": true,
+    "noImplicitAny": true,
     "watch": true
   },
   "files": [
