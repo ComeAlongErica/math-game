@@ -4,42 +4,76 @@ var Player = (function () {
     Player.prototype.formatName = function () { return this.name.toUpperCase(); };
     return Player;
 }());
-function startGame() {
-    var playerName;
-    playerName = getInputValue('playername');
-    logPLayer(playerName);
-    postScore(100);
-    postScore(-5);
-    var messagesElement = document.getElementById('messages');
-    messagesElement.innerText = 'Welcome! Starting a new game...';
-}
-function logPLayer(name) {
-    if (name === void 0) { name = 'Player'; }
-    console.log("New game is starting for played: " + name);
-}
-function getInputValue(elementId) {
-    var inputElm = document.getElementById(elementId);
-    return inputElm.value === '' ? undefined : inputElm.value;
-}
-function postScore(score, player) {
-    if (player === void 0) { player = 'Player'; }
-    var logger;
-    if (score < 0) {
-        logger = logError;
+var Utility = (function () {
+    function Utility() {
     }
-    else {
-        logger = logMessage;
+    Utility.getInputValue = function (elementId) {
+        var inputElm = document.getElementById(elementId);
+        return inputElm.value;
+    };
+    return Utility;
+}());
+var Scoreboard = (function () {
+    function Scoreboard() {
+        this.results = [];
     }
-    var inputElm = document.getElementById('postedScores');
-    inputElm.innerText = player + ": " + score;
-    logger("Score: " + score);
-}
-document.getElementById('startGame').addEventListener('click', startGame);
-var logMessage = function (message) { return console.log(message); };
-function logError(err) {
-    console.error(err);
-}
-var firstPLayer = new Player();
-firstPLayer.name = 'Jon Snow';
-console.log(firstPLayer.formatName());
+    Scoreboard.prototype.addResult = function (newResult) {
+        this.results.push(newResult);
+    };
+    Scoreboard.prototype.updateScoreboard = function () {
+        var output = '<h2>Scoreboard</h2>';
+        this.results.forEach(function (result) {
+            output += "<h4>" + result.playerName + ": " + result.score + " / " + result.problemCount + " for factor " + result.factor + "</h4>";
+        });
+        var scoresElement = document.getElementById('scores');
+        scoresElement.innerHTML = output;
+    };
+    return Scoreboard;
+}());
+var Game = (function () {
+    function Game(player, problemCount, factor) {
+        this.player = player;
+        this.problemCount = problemCount;
+        this.factor = factor;
+        this.scoreboard = new Scoreboard();
+    }
+    Game.prototype.displayGame = function () {
+        var gameForm = '';
+        for (var i = 1; i <= this.problemCount; i++) {
+            gameForm += "<div class=\"form-group\"><label for=\"answer" + i + "\" class=\"col-sm-2 control-label\">\n      " + String(this.factor) + " x " + i + "\n      <div class\"col-sm-1><input type=\"text\" class=\"form-control\" id=\"answer" + i + "\" size=\"5\"></div>\n      </label></div>";
+        }
+        var gameElement = document.getElementById('game');
+        gameElement.innerHTML = gameForm;
+        document.getElementById('calculate').removeAttribute('disabled');
+    };
+    Game.prototype.calculateScore = function () {
+        var score = 0;
+        for (var problem = 1; problem <= this.problemCount; problem++) {
+            var answer = Number(Utility.getInputValue("answer" + problem));
+            if (problem * this.factor === answer) {
+                score++;
+            }
+        }
+        var result = {
+            playerName: this.player.name,
+            score: score,
+            problemCount: this.problemCount,
+            factor: this.factor
+        };
+        this.scoreboard.addResult(result);
+        this.scoreboard.updateScoreboard();
+        document.getElementById('calculate').setAttribute('disabled', 'true');
+    };
+    return Game;
+}());
+var newGame;
+document.getElementById('startGame').addEventListener('click', function () {
+    var player = new Player();
+    player.name = Utility.getInputValue('playername');
+    var problemCount = Number(Utility.getInputValue('problemCount'));
+    var factor = Number(Utility.getInputValue('factor'));
+    newGame = new Game(player, problemCount, factor);
+    newGame.displayGame();
+});
+document.getElementById('calculate').addEventListener('click', function () { return newGame.calculateScore(); });
 //# sourceMappingURL=app.js.map
