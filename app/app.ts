@@ -42,3 +42,15 @@ const logMessage = (message: string) => console.log(message)
 function logError(err: string): void {
   console.error(err)
 }
+
+let myResult: Result = {
+  playerName: 'Erica',
+  score: 5,
+  problemCount: 5,
+  factor: 5
+}
+
+let player: Person = {
+  name: 'Person',
+  formatName: () => 'Person'
+}
